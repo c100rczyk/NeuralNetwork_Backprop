@@ -1,0 +1,8 @@
+#The process and the reason why calculating derivatives 
+#looks the way it does stem from mathematical derivation.
+
+def SUMMATION(Observed, Predicted, y_func):
+    y=0
+    for x in range(len(Observed)):
+        y += -2 * (Observed[x] - Predicted[x]) * y_func[x]
+    return y
