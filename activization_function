@@ -1,0 +1,11 @@
+import math
+
+def activation_function(x):
+    """
+    it gets value of input multiply by weight and added to bias
+    x1 = input1 * wage1 + bias1
+    f(x1) = log(1 + e^x)
+    """
+    y = math.log(1 + math.exp(x))
+
+    return y
