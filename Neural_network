@@ -1,0 +1,78 @@
+import numpy as np
+import math
+from activation_func import activation_function
+from Derivative_Calc import SUMMATION
+from ActualizationWeights import NewValues
+import pandas as pd
+import sympy
+import matplotlib.pyplot as plt
+
+LEARNING_RATE = 0.1     # 0.1 is good in this problem
+Dosage_of_drug = np.arange(0,1.1,0.5)
+observed_values = [0,1,0]
+
+weight1 = 3.34  # uknown optimal value
+weight2 = -3.53 # uknown optimal value 
+weight3 = 0.36  # random from normal Standard Distribution
+weight4 = 0.63  # random from normal Standard Distribution
+
+
+b_1 = -1.43     #unknown optimal value
+b_2 = 0.57      #unknown ooptima value
+
+b_3 = 0         # it can be any value (but in code is 
+                #visible that 0 is untrained value)
+
+input_to_activation1 = Dosage_of_drug * weight1 + b_1   
+input_to_activation2 = Dosage_of_drug * weight2 + b_2
+
+y_func_1 = []   # results of acitvation function - output depend on dosage
+y_func_2 = []   # second node with activation function
+
+"""Creating activation functions. We have only 3 data so it will
+be rather the "pointing activation function" but who cares...;)
+"""
+for x in input_to_activation1:
+    y_func_1.append(activation_function(x))
+
+for x in input_to_activation2:
+    y_func_2.append(activation_function(x))
+
+"""
+Use Matplotlib to visualise the results.
+"""
+fig, ax = plt.subplots()
+line, = ax.plot([], [], label='Matched function')
+ax.set_xlabel('Dosage')
+ax.set_ylabel('value of fitness function')
+ax.set_title('Chart of the matched function during the learning')
+ax.legend()
+ax.grid(True)
+
+how_many=0
+plt.pause(10)
+while how_many<180:    #after 180 backpropagation cicles i thnk that NN gives us good result
+    Matched_function = (np.array(y_func_1) * weight3) + \
+        (np.array(y_func_2) * weight4) + b_3
+    #print("Activation function: ",y_func_1)
+    #print("Matched function: ",Matched_function)    #see how changing the results
+    #print("wages: ",weight3, weight4, b_3)
+    derivative_w_3 = SUMMATION(observed_values, Matched_function, y_func_1)
+    derivative_w_4 = SUMMATION(observed_values, Matched_function, y_func_2)
+    derivative_b_3 = SUMMATION(observed_values, Matched_function, [1,1,1])
+    #print(derivative_w_3,derivative_w_4,derivative_b_3)
+
+    
+    weight3 = NewValues(derivative_w_3,weight3, LEARNING_RATE)
+    weight4 = NewValues(derivative_w_4,weight4, LEARNING_RATE)
+    b_3 = NewValues(derivative_b_3,b_3, LEARNING_RATE)
+    #print("new wages: ",weight3, weight4, b_3)
+
+    line.set_data(Dosage_of_drug, Matched_function)   # update to be good visible in action
+    ax.relim()
+    ax.autoscale_view()     #the range of values are changing
+    plt.pause(0.01)
+    how_many +=1
+
+
+plt.show()
