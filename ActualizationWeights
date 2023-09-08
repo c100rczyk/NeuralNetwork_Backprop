@@ -1,0 +1,8 @@
+""" We have to actualize the Weights in each cycle of
+backpropagation"""
+
+def NewValues(derivative, old_wage, learn_value):
+    StepSize = derivative * learn_value
+    result = old_wage - StepSize
+
+    return result
